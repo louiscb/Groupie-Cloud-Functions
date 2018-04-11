@@ -13,3 +13,10 @@ results
 build
 
 node_modules
+
+# IntelliJ
+out/
+.idea/
+.idea_modules/
+
+.DS_Store
