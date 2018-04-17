@@ -1,3 +1,10 @@
+/**
+ *  HTTP Command to leave a group
+ *
+ *  Triggers for when a user leaves a group are in 'members/onDelete'
+ *
+ */
+
 const functions = require('firebase-functions');
 const admin = require('../../admin');
 
@@ -10,5 +17,4 @@ exports = module.exports = functions.https.onRequest((req, res) => {
         return res.send('success');
     });
 
-    //triggers for when a user leaves a group are in members/onDelete
 });

@@ -17,6 +17,22 @@ module.exports = {
         };
 
         return admin.database().ref(userGroupsPath).child(groupId).set(groupHistoryObj);
+    },
+
+    increaseFrequency: function (path) {
+        return admin.database().ref(path).once('value', (snapshot) => {
+            let freq = snapshot.val();
+            freq++;
+            return admin.database().ref(path).set(freq);
+        });
+    },
+
+    decreaseFrequency: function (path) {
+        return admin.database().ref(path).once('value', (snapshot) => {
+            let freq = snapshot.val();
+            freq--;
+            return admin.database().ref(path).set(freq);
+        });
     }
 };
 

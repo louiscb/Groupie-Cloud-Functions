@@ -19,11 +19,20 @@ const admin = require('../../admin');
 exports = module.exports = functions.https.onRequest((req, res) => {
     let groupId = req.body.groupId;
     let userId = req.body.userId;
-    let path = 'groups/' + groupId + '/members';
-    let member = { [userId] : true };
+    let groupPath = '/groups/' + groupId ;
 
     //ONLY IF PUBLIC AND MAX MEMBERS NOT MET
-    return admin.database().ref(path).update(member).then((snapshot) => {
-        return res.send('success');
+    return admin.database().ref(groupPath).once('value', (snapshot) => {
+        let group = snapshot.val();
+
+        if (group.numberOfMembers < group.maxNumberOfMembers) {
+            let member = { [userId] : true };
+            let membersPath = groupPath + '/members';
+            return admin.database().ref(membersPath).update(member).then((snapshot) => {
+                return res.send('success');
+            });
+        } else {
+            return res.status(403).send('This group is full!');
+        }
     });
 });
