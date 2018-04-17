@@ -23,10 +23,10 @@ exports = module.exports = functions.https.onRequest((req, res) => {
 
     return admin.database().ref(path).once('value', (snapshot) => {
         let group = snapshot.val();
-        let isPublicPath = path + '/isPublic/';
+        let isPublicPath = path + '/isPublic';
         let isPublic;
 
-        if (group.isPublic() === 'true') {
+        if (group.isPublic === 'true') {
             isPublic = false;
             admin.database().ref(isPublicPath).set('false');
         } else {

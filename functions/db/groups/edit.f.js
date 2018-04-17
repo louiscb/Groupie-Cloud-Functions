@@ -14,3 +14,15 @@
 //         return "user doesn't not have permissions"
 //     end
 // end
+
+const functions = require('firebase-functions');
+const admin = require('../../admin');
+
+exports = module.exports = functions.https.onRequest((req, res) => {
+    let groupId = req.body.groupId;
+    let path = 'groups/' + groupId;
+
+    return admin.database().ref(path).update(req.body.group).then((snapshot) => {
+        return res.send("success");
+    });
+});

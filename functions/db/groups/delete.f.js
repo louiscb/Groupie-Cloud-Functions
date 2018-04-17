@@ -1,15 +1,14 @@
-// HTTP Request from app
+//Not neccesary as we don't need user delete function.
+//Maybe when you delete put group in archive?
+
+// const functions = require('firebase-functions');
+// const admin = require('../../admin');
 //
-// function DeleteGroup (GroupID) do
-//     group = getGroupFromDB(GroupID)
-//     //how can we authenticate that the user is who they say they are?
+// exports = module.exports = functions.https.onRequest((req, res) => {
+//     let groupId = req.body.groupId;
+//     let path = 'groups/' + groupId;
 //
-//     if group.owner == request.UserID do
-//       group.deleted = true
-//       updateGroupDB(group)
-//       notifyGroup(groupID, "Deleted group")
-//       return success
-//     else
-//       return cannot delete group
-//     end
-// end
+//     return admin.database().ref(path).remove().then((snapshot) => {
+//         return res.send('success');
+//     });
+// });

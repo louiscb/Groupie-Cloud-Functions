@@ -1,13 +1,14 @@
-// // send group get related active group if any
-// HTTP Request from app
-//
-// function Leave (GroupID, UserID) do
-//   if !request.user == UserID
-//     return error you are not this user
-//
-//   group = getGroupFromDB
-//
-//   group.members remove UserID
-//   user.groups(GroupID) remove
-//   notificationMemberLeft(GroupID, getUserName(UserID))
-// end
+const functions = require('firebase-functions');
+const admin = require('../../admin');
+
+exports = module.exports = functions.https.onRequest((req, res) => {
+    let groupId = req.body.groupId;
+    let userId = req.body.userId;
+    let path = 'groups/' + groupId + '/members/' + userId;
+
+    return admin.database().ref(path).remove().then((snapshot) => {
+        return res.send('success');
+    });
+
+    //triggers for when a user leaves a group are in members/onDelete
+});
