@@ -21,18 +21,19 @@ exports = module.exports = functions.https.onRequest((req, res) => {
     let userId = req.body.userId;
     let groupPath = '/groups/' + groupId ;
 
-    //ONLY IF PUBLIC AND MAX MEMBERS NOT MET
+    //Need to add caveat to see if someone is already member of group
     return admin.database().ref(groupPath).once('value', (snapshot) => {
         let group = snapshot.val();
 
-        if (group.numberOfMembers < group.maxNumberOfMembers) {
+        //ONLY IF PUBLIC AND MAX NUM MEMBERS NOT MET
+        if (group.numberOfMembers < group.maxNumberOfMembers && group.isPublic) {
             let member = { [userId] : true };
             let membersPath = groupPath + '/members';
             return admin.database().ref(membersPath).update(member).then((snapshot) => {
                 return res.send('success');
             });
         } else {
-            return res.status(403).send('This group is full!');
+            return res.status(403).send('Could not join group');
         }
     });
 });

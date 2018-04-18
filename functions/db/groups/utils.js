@@ -53,7 +53,7 @@ module.exports = {
                 if (!numOfGroups)
                     MAX_GROUP_AMOUNT = keys.length;
 
-                for (let i=keys.length-1; i > 0; i--) {
+                for (let i=keys.length-1; i > -1; i--) {
                     let key = keys[i];
                     let group = groups[key];
                     console.log(group);
@@ -73,6 +73,15 @@ module.exports = {
                 return null;
             }
         });
+    },
+    getDate : function () {
+        return getDate();
+    },
+    //Takes a getDate formatted string and converts it into JS date object
+    //allows you to compare dates like for seeing if it is past date of meeting
+    convertToDateObj : function (date){
+        let parts = date.split("-");
+        return new Date(parts[2], parts[1] - 1, parts[0]);
     }
 };
 
@@ -82,5 +91,5 @@ function getDate() {
     let mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
     let dd  = date.getDate().toString();
 
-    return yyyy + '-' + (mm[1]?mm:"0"+mm[0]) + '-' + (dd[1]?dd:"0"+dd[0]);
+    return (dd[1]?dd:"0"+dd[0]) + '-' + (mm[1]?mm:"0"+mm[0]) + '-' + yyyy;
 }

@@ -15,7 +15,9 @@ exports = module.exports = functions.database.ref('/groups/{groupId}/members/{us
     let groupId = context.params.groupId;
 
     let numberOfMembersPath = '/groups/' + groupId + '/numberOfMembers';
-    utils.decreaseFrequency(numberOfMembersPath);
+
+    if (change.numChildren() > 0)
+        utils.decreaseFrequency(numberOfMembersPath);
 
     chooseNewOwner(userId, groupId);
 

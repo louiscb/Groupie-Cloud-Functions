@@ -6,3 +6,7 @@
 //     addUser(User)
 //     sendWelcomeEmail(User)
 // end
+const functions = require('firebase-functions');
+const admin = require('../../admin');
+
+//admin.auth().current
