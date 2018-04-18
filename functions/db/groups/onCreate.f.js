@@ -13,16 +13,8 @@ exports = module.exports = functions.database.ref('/groups/{groupId}/').onCreate
 
     if (group.topic) {
         let topicPath = subjectPath + '/topics/' + group.topic;
-        updateFreq(topicPath);
+        utils.increaseFrequency(topicPath);
     }
 
     return utils.increaseFrequency(subjectPath + '/frequency/');
 });
-
-// function updateFreq(path) {
-//     return admin.database().ref(path).once('value', (snapshot) => {
-//         let freq = snapshot.val();
-//         freq++;
-//         return admin.database().ref(path).set(freq);
-//     });
-// }
