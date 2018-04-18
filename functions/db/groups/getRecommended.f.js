@@ -1,15 +1,12 @@
-// // send group get related active group if any
-// HTTP Request from app
-//
-// function GetRecommended (UserID) do
-//   list = getGroupFromDB(active)
-//   subject = getFavouriteSubject(UserID)
-//
-//   list = list where list.subject == subject
-//
-//   if list > 3
-//     list = list where list.dayOfMeeting == today && list.numberOfMembers > 1
-//   etc ...
-//
-//   return first 3 of list
-// end
+const functions = require('firebase-functions');
+const admin = require('../../admin');
+const utils = require('./utils');
+
+exports = module.exports = functions.https.onRequest((req, res) => {
+    let numOfGroups = 3;
+
+    //shitty way to do it, need to do it better
+    return utils.getRecentPublicGroups(numOfGroups).then(function(data) {
+        return res.send(data);
+    });
+});

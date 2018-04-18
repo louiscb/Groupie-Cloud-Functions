@@ -33,6 +33,46 @@ module.exports = {
             freq--;
             return admin.database().ref(path).set(freq);
         });
+    },
+
+    getRecentPublicGroups: function(numOfGroups) {
+        let path = '/groups/';
+        let MAX_GROUP_AMOUNT = numOfGroups;
+
+        //returning a promise. To access 'data' variable you have to enter the promise
+        //similar to functional programming.
+        //Read about here: https://blog.domenic.me/youre-missing-the-point-of-promises/
+        return admin.database().ref(path).once('value').then(function (snapshot) {
+            let data = { groups : []};
+
+            if (snapshot.hasChildren()) {
+                let groups = snapshot.val();
+                let keys = Object.keys(groups);
+
+                //If we want all of the public groups send null as parameter
+                if (!numOfGroups)
+                    MAX_GROUP_AMOUNT = keys.length;
+
+                for (let i=keys.length-1; i > 0; i--) {
+                    let key = keys[i];
+                    let group = groups[key];
+                    console.log(group);
+
+                    if (group.isPublic) {
+                        group.groupId = key;
+                        data.groups.push(group);
+                    }
+
+                    //LIMIT THE MAX AMOUNT OF GROUPS WE WANT TO RECEIVE
+                    if (i < keys.length-MAX_GROUP_AMOUNT)
+                        break;
+                }
+
+                return data;
+            } else {
+                return null;
+            }
+        });
     }
 };
 
