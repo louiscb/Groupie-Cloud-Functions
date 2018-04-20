@@ -13,3 +13,15 @@
 //   //which is faster?
 //   //we could organise the lists with other factors to do with the user
 // end
+
+const functions = require('firebase-functions');
+const admin = require('../../../admin');
+
+exports = module.exports = functions.https.onRequest((req, res) => {
+    let userId = req.body.userId;
+    let path = '/users/' + userId + '/profile';
+
+    return admin.database().ref(path).once('value', (snapshot) => {
+      return res.send(snapshot.val());
+    })
+});
