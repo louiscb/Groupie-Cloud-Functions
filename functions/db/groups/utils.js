@@ -18,7 +18,6 @@ module.exports = {
 
         return admin.database().ref(userGroupsPath).child(groupId).set(groupHistoryObj);
     },
-
     increaseFrequency: function (path) {
         return admin.database().ref(path).once('value', (snapshot) => {
             let freq = snapshot.val();

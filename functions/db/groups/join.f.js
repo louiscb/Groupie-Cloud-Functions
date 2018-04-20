@@ -16,9 +16,34 @@
 const functions = require('firebase-functions');
 const admin = require('../../admin');
 
-exports = module.exports = functions.https.onRequest((req, res) => {
-    let groupId = req.body.groupId;
-    let userId = req.body.userId;
+// exports = module.exports = functions.https.onRequest((req, res) => {
+//     let groupId = req.body.groupId;
+//     let userId = req.body.userId;
+//     let groupPath = '/groups/' + groupId ;
+//
+//     //Need to add caveat to see if someone is already member of group
+//     return admin.database().ref(groupPath).once('value', (snapshot) => {
+//         let group = snapshot.val();
+//
+//         //ONLY IF PUBLIC AND MAX NUM MEMBERS NOT MET
+//         if (group.numberOfMembers < group.maxNumberOfMembers && group.isPublic) {
+//             let member = { [userId] : true };
+//             let membersPath = groupPath + '/members';
+//             return admin.database().ref(membersPath).update(member).then((snapshot) => {
+//                 return res.send('success');
+//             });
+//         } else {
+//             return res.status(403).send('Could not join group');
+//         }
+//     });
+// });
+
+exports = module.exports = functions.https.onCall((data, context) => {
+    if (!context.auth)
+        throw new functions.https.HttpsError('failed-precondition', 'The function must be called while authenticated.');
+
+    let userId = context.auth.uid;
+    let groupId = data.groupId;
     let groupPath = '/groups/' + groupId ;
 
     //Need to add caveat to see if someone is already member of group
@@ -30,10 +55,10 @@ exports = module.exports = functions.https.onRequest((req, res) => {
             let member = { [userId] : true };
             let membersPath = groupPath + '/members';
             return admin.database().ref(membersPath).update(member).then((snapshot) => {
-                return res.send('success');
+                return {text: 'success'};
             });
         } else {
-            return res.status(403).send('Could not join group');
+            return {text: 'Could not join group'};
         }
     });
 });

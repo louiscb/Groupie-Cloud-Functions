@@ -2,7 +2,7 @@ const functions = require('firebase-functions');
 const admin = require('../../admin');
 const utils = require('./utils');
 
-exports = module.exports = functions.database.ref('/groups/{groupId}/').onCreate((change, context) => {
+exports = module.exports = functions.database.ref('/groups/{cunt}/').onCreate((change, context) => {
     let group = change.val();
     let groupId = change.key;
 

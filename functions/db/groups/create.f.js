@@ -8,5 +8,5 @@ exports = module.exports = functions.https.onRequest((req, res) => {
     let groupURL = admin.database().ref('/groups').push(group).toString();
     let groupId = groupURL.substr(groupURL.lastIndexOf('/') + 1);
 
-    res.send(groupId);
+    return res.send(groupId);
 });
