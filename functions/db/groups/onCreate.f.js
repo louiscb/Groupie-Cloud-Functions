@@ -2,7 +2,7 @@ const functions = require('firebase-functions');
 const admin = require('../../admin');
 const utils = require('./utils');
 
-exports = module.exports = functions.database.ref('/groups/{cunt}/').onCreate((change, context) => {
+exports = module.exports = functions.database.ref('/groups/{groupId}/').onCreate((change, context) => {
     let group = change.val();
     let groupId = change.key;
 
@@ -16,5 +16,16 @@ exports = module.exports = functions.database.ref('/groups/{cunt}/').onCreate((c
         utils.increaseFrequency(topicPath);
     }
 
-    return utils.increaseFrequency(subjectPath + '/frequency/');
+    utils.increaseFrequency(subjectPath + '/frequency/');
+
+    //create converstaion object
+    let convo = {};
+    convo.members = group.members;
+    convo.creationDate = utils.getDate();
+
+    let convoId = admin.database().ref('/conversations').push(convo).key;
+
+    let convoObj = { conversationId : convoId };
+    let path = 'groups/' + groupId;
+    return admin.database().ref(path).update(convoObj);
 });

@@ -16,16 +16,22 @@ exports = module.exports = functions.database.ref('/groups/{groupId}/members/{us
 
     let numberOfMembersPath = '/groups/' + groupId + '/numberOfMembers';
 
-    if (change.numChildren() > 0)
-        utils.decreaseFrequency(numberOfMembersPath);
+    utils.decreaseFrequency(numberOfMembersPath);
 
     chooseNewOwner(userId, groupId);
 
     //Change group history of user who left
 
-    let userPath = 'users/' + userId;
+    let userPath = '/users/' + userId;
     let groupHistoryPath = userPath + '/groupHistory/' + groupId;
-    return admin.database().ref(groupHistoryPath).remove();
+    admin.database().ref(groupHistoryPath).remove();
+
+    let groupPath = '/groups/' + groupId;
+    return admin.database().ref(groupPath).once('value', (snapshot) => {
+        let group = snapshot.val();
+        let convoPath = '/conversations/' + group.conversationId + '/members/' + userId;
+        return admin.database().ref(convoPath).remove();
+    });
 });
 
 function chooseNewOwner(userId, groupId) {
