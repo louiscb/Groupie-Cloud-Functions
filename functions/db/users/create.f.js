@@ -14,7 +14,6 @@ exports = module.exports = functions.https.onCall((data, context) => {
     let userId = context.auth.uid;
     let user = {};
     user.profile = profile;
-    context.instanceIdToken;
 
     return admin.database().ref('/users').child(userId).set(user).then((value) => {
         return { text : 'success ' + userId };

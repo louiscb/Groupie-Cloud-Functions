@@ -42,7 +42,9 @@ module.exports = {
         //similar to functional programming.
         //Read about here: https://blog.domenic.me/youre-missing-the-point-of-promises/
         return admin.database().ref(path).once('value').then(function (snapshot) {
-            let data = { groups : []};
+//            let data = { groups : []};
+            let data = [];
+
 
             if (snapshot.hasChildren()) {
                 let groups = snapshot.val();
@@ -55,11 +57,10 @@ module.exports = {
                 for (let i=keys.length-1; i > -1; i--) {
                     let key = keys[i];
                     let group = groups[key];
-                    console.log(group);
 
                     if (group.isPublic) {
                         group.groupId = key;
-                        data.groups.push(group);
+                        data.push(group);
                     }
 
                     //LIMIT THE MAX AMOUNT OF GROUPS WE WANT TO RECEIVE
@@ -78,9 +79,14 @@ module.exports = {
     },
     //Takes a getDate formatted string and converts it into JS date object
     //allows you to compare dates like for seeing if it is past date of meeting
-    convertToDateObj : function (date){
+    convertToDateObj : function (date) {
         let parts = date.split("-");
         return new Date(parts[2], parts[1] - 1, parts[0]);
+    },
+    convertDateToUnix : function (date) {
+        date = date.split('-');
+        let newDate=date[1]+"/"+date[0]+"/"+date[2];
+        return Math.floor(new Date(newDate).getTime() / 1000)
     }
 };
 

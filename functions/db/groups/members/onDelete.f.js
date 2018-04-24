@@ -27,6 +27,7 @@ exports = module.exports = functions.database.ref('/groups/{groupId}/members/{us
     admin.database().ref(groupHistoryPath).remove();
 
     let groupPath = '/groups/' + groupId;
+
     return admin.database().ref(groupPath).once('value', (snapshot) => {
         let group = snapshot.val();
         let convoPath = '/conversations/' + group.conversationId + '/members/' + userId;

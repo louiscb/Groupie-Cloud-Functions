@@ -18,6 +18,8 @@ exports = module.exports = functions.database.ref('/groups/{groupId}/').onCreate
 
     utils.increaseFrequency(subjectPath + '/frequency/');
 
+    //time stamp in unix time
+    let timeStamp = utils.convertDateToUnix(group.dateOfMeeting);
     //create converstaion object
     let convo = {};
     convo.members = group.members;
@@ -25,7 +27,7 @@ exports = module.exports = functions.database.ref('/groups/{groupId}/').onCreate
 
     let convoId = admin.database().ref('/conversations').push(convo).key;
 
-    let convoObj = { conversationId : convoId };
+    let updateObj = { conversationId : convoId, meetingDateTimeStamp : timeStamp };
     let path = 'groups/' + groupId;
-    return admin.database().ref(path).update(convoObj);
+    return admin.database().ref(path).update(updateObj);
 });
