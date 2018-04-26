@@ -16,22 +16,26 @@ exports = module.exports = functions.database.ref('/groups/{groupId}/members/{us
 
     let numberOfMembersPath = '/groups/' + groupId + '/numberOfMembers';
 
-    utils.decreaseFrequency(numberOfMembersPath);
+    return admin.database().ref(numberOfMembersPath).once('value', (snapshot) => {
+        if (snapshot.val() < 1)
+            return null;
 
-    chooseNewOwner(userId, groupId);
+        utils.decreaseFrequency(numberOfMembersPath);
 
-    //Change group history of user who left
+        chooseNewOwner(userId, groupId);
 
-    let userPath = '/users/' + userId;
-    let groupHistoryPath = userPath + '/groupHistory/' + groupId;
-    admin.database().ref(groupHistoryPath).remove();
+        //Change group history of user who left
+        let userPath = '/users/' + userId;
+        let groupHistoryPath = userPath + '/groupHistory/' + groupId;
+        admin.database().ref(groupHistoryPath).remove();
 
-    let groupPath = '/groups/' + groupId;
+        let groupPath = '/groups/' + groupId;
 
-    return admin.database().ref(groupPath).once('value', (snapshot) => {
-        let group = snapshot.val();
-        let convoPath = '/conversations/' + group.conversationId + '/members/' + userId;
-        return admin.database().ref(convoPath).remove();
+        return admin.database().ref(groupPath).once('value', (snapshot) => {
+            let group = snapshot.val();
+            let convoPath = '/conversations/' + group.conversationId + '/members/' + userId;
+            return admin.database().ref(convoPath).remove();
+        });
     });
 });
 
@@ -69,6 +73,6 @@ function chooseNewOwner(userId, groupId) {
 function notifyGroupMemberHasLeft(groupPath, message) {
     return admin.database().ref(groupPath).once('value', (snapshot) => {
         console.log(message);
-        return;
+        return null;
     });
 }

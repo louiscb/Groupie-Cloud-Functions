@@ -3,7 +3,7 @@ const admin = require('../../admin');
 
 exports = module.exports = functions.https.onCall((data, context) => {
     if (!context.auth)
-        throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
+        throw new functions.https.HttpsError('unauthenticated', 'The fu2nction must be called while authenticated.');
 
     let userId = context.auth.uid;
     let groupId = data;

@@ -1,8 +1,11 @@
 const functions = require('firebase-functions');
 const admin = require('../../../admin');
 
-exports = module.exports = functions.https.onRequest((req, res) => {
-    let userId = req.body.userId;
+exports = module.exports = functions.https.onCall((data, context) => {
+    if (!context.auth)
+        throw new functions.https.HttpsError('failed-precondition', 'The function must be called while authenticated.');
+
+    let userId = data;
     let path = '/users/' + userId + '/profile';
 
     return admin.database().ref(path).once('value', (snapshot) => {
@@ -17,6 +20,6 @@ exports = module.exports = functions.https.onRequest((req, res) => {
         publicProfile.school = profile.school;
         publicProfile.fieldOfMeeting = profile.fieldOfMeeting;
 
-        return res.send(publicProfile);
+        return publicProfile;
     })
 });

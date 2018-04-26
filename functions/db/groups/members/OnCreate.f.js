@@ -15,8 +15,9 @@ exports = module.exports = functions.database.ref('/groups/{groupId}/members/{us
 
     return admin.database().ref(groupPath).once('value', (snapshot) => {
         let group = snapshot.val();
+        console.log("SET PUBLIC FALSE");
 
-        if (group.numberOfMembers >= group.maxNumberOfMembers) {
+        if (group.numberOfMembers === group.maxNumberOfMembers || group.numberOfMembers > group.maxNumberOfMembers  ) {
             console.log("SET PUBLIC FALSE");
             admin.database().ref(groupPath).child('isPublic').set(false);
         }
