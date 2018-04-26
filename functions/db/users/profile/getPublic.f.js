@@ -8,7 +8,7 @@ exports = module.exports = functions.https.onCall((data, context) => {
     let userId = data;
     let path = '/users/' + userId + '/profile';
 
-    return admin.database().ref(path).once('value', (snapshot) => {
+    return admin.database().ref(path).once('value').then(function (snapshot) {
         let publicProfile = {};
         let profile = snapshot.val();
 
