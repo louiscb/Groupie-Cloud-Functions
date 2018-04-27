@@ -27,6 +27,14 @@ exports = module.exports = functions.database.ref('/groups/{groupId}/').onCreate
 
     let convoId = admin.database().ref('/conversations').push(convo).key;
 
+    //Welcome message for creating group
+    let notification = {};
+    notification.senderUserId = 'notification';
+    notification.name = 'Someone';
+    notification.text = 'has created this new group';
+    let messagingPath = '/conversations/' + convoId + '/messages/';
+    admin.database().ref(messagingPath).push(notification);
+
     let updateObj = { conversationId : convoId, meetingDateTimeStamp : timeStamp };
     let path = 'groups/' + groupId;
     return admin.database().ref(path).update(updateObj);
