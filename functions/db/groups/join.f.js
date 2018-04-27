@@ -3,7 +3,7 @@ const admin = require('../../admin');
 
 exports = module.exports = functions.https.onCall((data, context) => {
     if (!context.auth)
-        throw new functions.https.HttpsError('unauthenticated', 'The fu2nction must be called while authenticated.');
+        throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
 
     let userId = context.auth.uid;
     let groupId = data;
@@ -18,8 +18,18 @@ exports = module.exports = functions.https.onCall((data, context) => {
 
         //ONLY IF PUBLIC AND MAX NUM MEMBERS NOT MET
         if (group.numberOfMembers < group.maxNumberOfMembers && group.isPublic) {
+            let notification = {};
+            notification.senderUserId = 'notification';
+            notification.name = 'Someone';
+            notification.text = 'has joined the group';
+
+            admin.database().ref(messagingPath).push(notification);
+
             let member = { [userId] : true };
             let membersPath = groupPath + '/members';
+
+            let messagingPath = '/conversations/' + group.conversationId + '/messages/';
+
 
             return admin.database().ref(membersPath).update(member).then((snapshot) => {
                 return "success";
