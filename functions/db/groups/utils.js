@@ -34,6 +34,13 @@ module.exports = {
         });
     },
 
+    /***
+     *
+     * @param numOfGroups
+     * @returns {Promise<any>}
+     *
+     * If we want all of the public groups send null as parameter
+     */
     getRecentPublicGroups: function(numOfGroups) {
         let path = '/groups/';
         let MAX_GROUP_AMOUNT = numOfGroups;
@@ -42,7 +49,6 @@ module.exports = {
         //similar to functional programming.
         //Read about here: https://blog.domenic.me/youre-missing-the-point-of-promises/
         return admin.database().ref(path).once('value').then(function (snapshot) {
-//            let data = { groups : []};
             let data = [];
 
             if (snapshot.hasChildren()) {
@@ -63,7 +69,7 @@ module.exports = {
                     }
 
                     //LIMIT THE MAX AMOUNT OF GROUPS WE WANT TO RECEIVE
-                    if (i < keys.length-MAX_GROUP_AMOUNT)
+                    if (i < keys.length-MAX_GROUP_AMOUNT || i < 1)
                         break;
                 }
 

@@ -14,8 +14,9 @@ exports = module.exports = functions.https.onCall((data, context) => {
         let group = snapshot.val();
 
         console.log('HELLO OVER HeRE ' + group.members.userId);
+
         //Check if user already member of group
-        if (group.members.userId)
+        if (group.members[userId])
             throw new functions.https.HttpsError('resource-exhausted', 'You are already a member of the group');
 
         //ONLY IF PUBLIC AND MAX NUM MEMBERS NOT MET
