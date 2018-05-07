@@ -45,7 +45,6 @@ module.exports = {
 //            let data = { groups : []};
             let data = [];
 
-
             if (snapshot.hasChildren()) {
                 let groups = snapshot.val();
                 let keys = Object.keys(groups);
@@ -87,6 +86,19 @@ module.exports = {
         date = date.split('-');
         let newDate=date[1]+"/"+date[0]+"/"+date[2];
         return Math.floor(new Date(newDate).getTime() / 1000)
+    },
+    sendGroupNotification : function (userId, convoId, text) {
+        return admin.database().ref('/users/').child(userId).once('value').then(function (snapshot) {
+            let user = snapshot.val();
+
+            let notification = {};
+            notification.senderUserId = 'notification';
+            notification.name = user.profile.firstName;
+            notification.text = text;
+
+            let messagingPath = '/conversations/' + convoId + '/messages/';
+            return admin.database().ref(messagingPath).push(notification);
+        });
     }
 };
 

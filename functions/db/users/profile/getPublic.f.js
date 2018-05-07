@@ -20,7 +20,9 @@ exports = module.exports = functions.https.onCall((data, context) => {
         publicProfile.lastName = profile.lastName;
         publicProfile.bio = profile.bio;
         publicProfile.school = profile.school;
+        publicProfile.profilePicture = profile.profilePicture;
+        publicProfile.fieldOfStudy = profile.fieldOfStudy;
 
-        return publicProfile;
+        return JSON.stringify(publicProfile);
     })
 });

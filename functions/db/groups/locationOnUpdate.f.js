@@ -2,7 +2,12 @@ const functions = require('firebase-functions');
 const admin = require('../../admin');
 
 exports = module.exports = functions.database.ref('/groups/{groupId}/location/').onUpdate((change, context) => {
-    let message = 'The owner has the location of the meeting';
-    console.log(message);
+    let message = 'has updated the location';
+
     //send notification to users that certain has been updated
+    return admin.database().ref('groups').child(groupId).once('value').then(function (snapshot) {
+        const group = snapshot.val();
+        utils.sendGroupNotification(group.owner, group.conversationId, message);
+        return ('success');
+    });
 });

@@ -10,7 +10,7 @@ const utils = require('./utils');
 exports = module.exports = functions.https.onRequest((req, res) => {
     return utils.getRecentPublicGroups(false).then(function(data) {
         let currentDate = utils.getDate();
-        let groups = data.groups;
+        let groups = data;
         console.log(groups);
 
         for (let i = 0; i < groups.length; i++) {
